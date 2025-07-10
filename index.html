@@ -58,8 +58,8 @@
   </header>
 
   <div class="container">
-    <p>Para continuar con tu solicitud, verifica tu identidad usando tu huella digital.</p>
-    <button onclick="autenticar()">Verificar con huella</button>
+    <p>Para continuar con tu solicitud de visa, verifica tu identidad usando tu huella digital.</p>
+    <button onclick="simularHuella()">Verificar con huella</button>
     <div id="mensaje"></div>
   </div>
 
@@ -68,35 +68,15 @@
   </footer>
 
   <script>
-    async function autenticar() {
+    function simularHuella() {
       const mensaje = document.getElementById("mensaje");
-      
-      if (!window.PublicKeyCredential) {
-        mensaje.innerText = "Tu navegador no soporta autenticación biométrica.";
-        return;
-      }
-
       mensaje.innerText = "Por favor, pon tu huella sobre el lector...";
-
-      try {
-        const credential = await navigator.credentials.get({
-          publicKey: {
-            challenge: new Uint8Array(32),
-            timeout: 60000,
-            userVerification: "required"
-          }
-        });
-
+      
+      // Simula escaneo de huella (3 segundos)
+      setTimeout(() => {
         mensaje.innerText = "✅ Huella tomada exitosamente. Identidad verificada.";
-        console.log("Credencial:", credential);
-
-        // Aquí podrías enviar los datos al servidor:
-        // await fetch('/guardar-biometria', { method: 'POST', body: JSON.stringify(credential) });
-
-      } catch (err) {
-        console.error("Error de autenticación:", err);
-        mensaje.innerText = "❌ No se pudo verificar la huella. Intenta nuevamente.";
-      }
+        console.log("Huella 'simulada' registrada.");
+      }, 3000);
     }
   </script>
 
