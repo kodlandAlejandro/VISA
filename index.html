@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Verificación Biométrica para Visa</title>
+  <title>Verificación Biométrica</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f3f6fa;
-      color: #333;
       margin: 0;
       padding: 0;
+      text-align: center;
     }
 
     header {
       background-color: #003366;
       color: white;
       padding: 20px;
-      text-align: center;
     }
 
     .container {
@@ -27,15 +26,6 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    h2 {
-      color: #003366;
-    }
-
-    p {
-      margin-bottom: 20px;
     }
 
     button {
@@ -48,74 +38,64 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #005bb5;
+    #mensaje {
+      margin-top: 20px;
+      font-weight: bold;
     }
 
     footer {
-      text-align: center;
+      margin-top: 30px;
       font-size: 12px;
       color: #777;
-      margin-top: 40px;
-      padding: 20px;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Ministerio de Asuntos Migratorios</h1>
-    <p>Plataforma segura de verificación biométrica</p>
+    <h1>Verificación de Identidad</h1>
+    <p>Proceso seguro con huella digital</p>
   </header>
 
   <div class="container">
-    <h2>Verificación de Identidad con Huella Digital</h2>
-    <p>
-      Esta verificación es requerida como parte del proceso de solicitud de visa.  
-      Los datos biométricos recolectados son confidenciales y utilizados únicamente con fines oficiales.
-    </p>
-    <p>
-      Al continuar, aceptas nuestra política de privacidad y autorizas el uso de tu huella digital para validar tu identidad.
-    </p>
-    <button onclick="autenticar()">Iniciar verificación segura</button>
+    <p>Para continuar con tu solicitud, verifica tu identidad usando tu huella digital.</p>
+    <button onclick="autenticar()">Verificar con huella</button>
+    <div id="mensaje"></div>
   </div>
 
   <footer>
-    © 2025 Ministerio de Asuntos Migratorios. Todos los derechos reservados.
+    © 2025 Verificación Biométrica. Todos los derechos reservados.
   </footer>
 
   <script>
     async function autenticar() {
+      const mensaje = document.getElementById("mensaje");
+      
       if (!window.PublicKeyCredential) {
-        alert("Tu navegador no soporta autenticación biométrica.");
+        mensaje.innerText = "Tu navegador no soporta autenticación biométrica.";
         return;
       }
+
+      mensaje.innerText = "Por favor, pon tu huella sobre el lector...";
 
       try {
         const credential = await navigator.credentials.get({
           publicKey: {
             challenge: new Uint8Array(32),
             timeout: 60000,
-            allowCredentials: [],
-            userVerification: "required",
-          },
+            userVerification: "required"
+          }
         });
 
-        // Datos simulados para enviar al servidor
-        const datosUsuario = {
-          id: credential.id,
-          tipo: credential.type,
-          autenticado: true,
-          timestamp: new Date().toISOString()
-        };
+        mensaje.innerText = "✅ Huella tomada exitosamente. Identidad verificada.";
+        console.log("Credencial:", credential);
 
-        // Simulación de envío
-        console.log("Datos enviados al servidor:", datosUsuario);
+        // Aquí podrías enviar los datos al servidor:
+        // await fetch('/guardar-biometria', { method: 'POST', body: JSON.stringify(credential) });
 
-        alert("Autenticación exitosa. Gracias por verificar tu identidad.");
       } catch (err) {
         console.error("Error de autenticación:", err);
-        alert("No se pudo verificar tu huella. Intenta nuevamente.");
+        mensaje.innerText = "❌ No se pudo verificar la huella. Intenta nuevamente.";
       }
     }
   </script>
